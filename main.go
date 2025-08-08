@@ -22,15 +22,15 @@ func getRoot(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		fmt.Printf("could not read body: %s\n", err)
+		fmt.Printf("Could not read the body of the request: %s\n", err)
 	}
 
-	fmt.Printf("%s: got / request. first(%t)=%s, second(%t)=%s, body:\n%s\n",
+	fmt.Printf("%s: Got / request. first(%t)=%s, second(%t)=%s, body:\n%s\n",
 		ctx.Value(keyServerAddr),
 		hasFirst, first,
 		hasSecond, second,
 		body)
-	io.WriteString(w, "This is my website!\n")
+	io.WriteString(w, "This is my Go HTTP server !\n")
 }
 func getHello(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
@@ -65,7 +65,7 @@ func main() {
 	if errors.Is(err, http.ErrServerClosed) {
 		fmt.Printf("server closed\n")
 	} else if err != nil {
-		fmt.Printf("error listening for server: %s\n", err)
+		fmt.Printf("Error listening for server: %s\n", err)
 	}
 
 	ctx, cancelCtx := context.WithCancel(context.Background())
@@ -90,28 +90,28 @@ func main() {
 	go func() {
 		err := serverOne.ListenAndServe()
 		if errors.Is(err, http.ErrServerClosed) {
-			fmt.Printf("server one closed\n")
+			fmt.Printf("Server One closed\n")
 		} else if err != nil {
-			fmt.Printf("error listening for server one: %s\n", err)
-		}
+			fmt.Printf("rror listening for server one: %s\n", err)
+		}E
 		cancelCtx()
 	}()
 
 	go func() {
 		err := serverTwo.ListenAndServe()
 		if errors.Is(err, http.ErrServerClosed) {
-			fmt.Printf("server two closed\n")
+			fmt.Printf("Server Two closed\n")
 		} else if err != nil {
-			fmt.Printf("error listening for server two: %s\n", err)
+			fmt.Printf("Error listening for server two: %s\n", err)
 		}
 		cancelCtx()
 	}()
 
 	<-ctx.Done()
-	fmt.Println("shutting down")
+	fmt.Println("Shutting down ... ")
 
 	serverOne.Shutdown(context.Background())
 	serverTwo.Shutdown(context.Background())
 
-	fmt.Println("done")
+	fmt.Println("Done !")
 }
